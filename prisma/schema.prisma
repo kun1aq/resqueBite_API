@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  MERCHANT
+  ADMIN
+  COURIER
+}
+
+enum FoodStatus {
+  FRESH
+  DISCOUNTED
+  FREE
+  COMPOST
+}
+
+enum AllergenType {
+  PEANUTS
+  TREE_NUTS
+  MILK
+  EGGS
+  FISH
+  SHELLFISH
+  SOY
+  WHEAT
+  SESAME
+  GLUTEN
+}
+
+enum ReservationStatus {
+  ACTIVE
+  CONFIRMED
+  EXPIRED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  role         UserRole @default(USER)
+
+  isEmailVerified          Boolean   @default(false)
+  emailVerificationToken   String?
+  emailVerificationExpires DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  allergies           UserAllergy[]
+  listings            FoodListing[]
+  reservations        StockReservation[]
+  refreshTokens       RefreshToken[]
+  locations           RestaurantLocation[]
+  courierReservations StockReservation[]   @relation("CourierReservations")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  revoked   Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserAllergy {
+  id        String       @id @default(uuid())
+  allergen  AllergenType
+  createdAt DateTime     @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, allergen])
+}
+
+model FoodListing {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  ingredients Json
+  price       Decimal    @db.Decimal(10, 2)
+  quantity    Int
+  status      FoodStatus @default(FRESH)
+
+  latitude  Float
+  longitude Float
+
+  freshUntil      DateTime
+  discountedUntil DateTime
+  freeUntil       DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  merchantId String
+  merchant   User   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  reservations StockReservation[]
+  locationId   String?
+  location     RestaurantLocation? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([merchantId])
+  @@index([latitude, longitude])
+}
+
+model StockReservation {
+  id       String            @id @default(uuid())
+  quantity Int
+  status   ReservationStatus @default(ACTIVE)
+
+  deliveryStatus DeliveryStatus @default(WAITING_FOR_COURIER)
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  listingId String
+  listing   FoodListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  courierId String?
+  courier   User?   @relation("CourierReservations", fields: [courierId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([deliveryStatus])
+  @@index([expiresAt])
+  @@index([courierId])
+}
+
+model RestaurantLocation {
+  id        String   @id @default(uuid())
+  name      String
+  address   String
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  merchantId String
+  merchant   User   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  listings FoodListing[]
+
+  @@index([merchantId])
+}
+
+enum DeliveryStatus {
+  WAITING_FOR_COURIER
+  ACCEPTED_BY_COURIER
+  PICKED_UP
+  DELIVERING
+  DELIVERED
+}
