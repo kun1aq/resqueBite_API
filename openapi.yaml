@@ -1,0 +1,392 @@
+openapi: 3.0.0
+
+info:
+  title: RescueBite API
+  version: 1.0.0
+  description: RescueBite fullstack food rescue platform API
+
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Listings
+  - name: Reservations
+  - name: Courier
+  - name: Locations
+  - name: Reviews
+  - name: Admin
+
+paths:
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register user
+      responses:
+        "201":
+          description: User registered
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login user
+      responses:
+        "200":
+          description: Login successful
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      responses:
+        "200":
+          description: Token refreshed
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout user
+      responses:
+        "200":
+          description: Logout successful
+
+  /auth/verify-email:
+    post:
+      tags: [Auth]
+      summary: Verify email
+      responses:
+        "200":
+          description: Email verified
+
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Get current user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user retrieved
+
+  /users/admin:
+    get:
+      tags: [Users]
+      summary: Admin only endpoint
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Admin access confirmed
+
+  /users/allergies:
+    put:
+      tags: [Users]
+      summary: Set user allergies
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Allergies updated
+
+  /listings:
+    get:
+      tags: [Listings]
+      summary: Get all listings
+      responses:
+        "200":
+          description: Listings retrieved
+
+    post:
+      tags: [Listings]
+      summary: Create listing
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Listing created
+
+  /listings/{id}:
+    patch:
+      tags: [Listings]
+      summary: Update listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Listing updated
+
+    delete:
+      tags: [Listings]
+      summary: Delete listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Listing deleted
+
+  /listings/{id}/status:
+    patch:
+      tags: [Listings]
+      summary: Update listing status
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Status updated
+
+  /listings/allergy-check:
+    post:
+      tags: [Listings]
+      summary: Check food allergies
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Allergy check completed
+
+  /reservations:
+    post:
+      tags: [Reservations]
+      summary: Create reservation
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Reservation created
+
+  /reservations/my:
+    get:
+      tags: [Reservations]
+      summary: Get my reservations
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Reservations retrieved
+
+  /reservations/{id}/confirm:
+    patch:
+      tags: [Reservations]
+      summary: Confirm reservation
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Reservation confirmed
+
+  /reservations/{id}/cancel:
+    patch:
+      tags: [Reservations]
+      summary: Cancel reservation
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Reservation cancelled
+
+  /reservations/deliveries/available:
+    get:
+      tags: [Courier]
+      summary: Get available deliveries
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Available deliveries retrieved
+
+  /reservations/deliveries/my:
+    get:
+      tags: [Courier]
+      summary: Get my deliveries
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Courier deliveries retrieved
+
+  /reservations/{id}/accept-delivery:
+    patch:
+      tags: [Courier]
+      summary: Accept delivery
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Delivery accepted
+
+  /reservations/{id}/delivery-status:
+    patch:
+      tags: [Courier]
+      summary: Update delivery status
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Delivery status updated
+
+  /locations:
+    get:
+      tags: [Locations]
+      summary: Get all locations
+      responses:
+        "200":
+          description: Locations retrieved
+
+    post:
+      tags: [Locations]
+      summary: Create location
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Location created
+
+  /locations/my:
+    get:
+      tags: [Locations]
+      summary: Get my locations
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Merchant locations retrieved
+
+  /locations/{id}:
+    get:
+      tags: [Locations]
+      summary: Get location by ID
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Location retrieved
+
+    patch:
+      tags: [Locations]
+      summary: Update location
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Location updated
+
+    delete:
+      tags: [Locations]
+      summary: Delete location
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Location deleted
+
+  /reviews:
+    get:
+      tags: [Reviews]
+      summary: Get all reviews
+      responses:
+        "200":
+          description: Reviews retrieved
+
+    post:
+      tags: [Reviews]
+      summary: Create review
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Review created
+
+  /reviews/my:
+    get:
+      tags: [Reviews]
+      summary: Get my reviews
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User reviews retrieved
+
+  /reviews/listing/{listingId}:
+    get:
+      tags: [Reviews]
+      summary: Get listing reviews
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Listing reviews retrieved
+
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: Get all users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Users retrieved
+
+  /admin/reservations:
+    get:
+      tags: [Admin]
+      summary: Get all reservations
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Reservations retrieved
+
+  /admin/stats:
+    get:
+      tags: [Admin]
+      summary: Get system stats
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: System stats retrieved
+
+  /admin/listings/{id}/compost:
+    patch:
+      tags: [Admin]
+      summary: Compost expired listing
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Listing composted
+
+  /admin/listings/{id}:
+    delete:
+      tags: [Admin]
+      summary: Delete listing as admin
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Listing deleted
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
