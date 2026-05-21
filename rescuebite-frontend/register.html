@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded-xl shadow-xl w-[420px]">
+    <h1 class="text-3xl font-bold mb-6 text-center">Create account</h1>
+
+    <form id="registerForm" class="space-y-4">
+        <input id="username" type="text" placeholder="Username" class="w-full border p-3 rounded-lg">
+        <input id="email" type="email" placeholder="Email" class="w-full border p-3 rounded-lg">
+        <input id="password" type="password" placeholder="Password" class="w-full border p-3 rounded-lg">
+
+        <select id="role" class="w-full border p-3 rounded-lg">
+            <option value="USER">User</option>
+            <option value="MERCHANT">Merchant</option>
+            <option value="COURIER">Courier</option>
+        </select>
+
+        <button class="w-full bg-green-600 text-white p-3 rounded-lg">
+            Register
+        </button>
+    </form>
+
+    <div id="verifyBox" class="hidden mt-6 space-y-4">
+        <p class="text-sm text-gray-600">
+            Enter verification code from response/Postman.
+        </p>
+
+        <input id="verifyToken" type="text" placeholder="Verification code" class="w-full border p-3 rounded-lg">
+
+        <button id="verifyBtn" class="w-full bg-blue-600 text-white p-3 rounded-lg">
+            Verify Email
+        </button>
+    </div>
+
+    <p class="mt-4 text-center">
+        Already have account?
+        <a href="login.html" class="text-blue-500">Login</a>
+    </p>
+</div>
+
+<script src="./js/api.js"></script>
+<script src="./js/register.js"></script>
+
+</body>
+</html>

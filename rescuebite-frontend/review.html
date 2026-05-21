@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<nav class="bg-white shadow p-4 flex justify-between">
+    <h1 class="text-2xl font-bold">Write Review</h1>
+
+    <div class="space-x-4">
+        <a href="reservations.html">Reservations</a>
+
+        <button onclick="logout()" class="text-red-500">
+            Logout
+        </button>
+    </div>
+</nav>
+
+<main class="max-w-2xl mx-auto mt-10 bg-white rounded-xl shadow p-8">
+
+    <form id="reviewForm" class="space-y-4">
+
+        <div>
+            <label class="block mb-2 font-bold">
+                Rating
+            </label>
+
+            <select
+                id="rating"
+                class="w-full border p-3 rounded-lg"
+            >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block mb-2 font-bold">
+                Comment
+            </label>
+
+            <textarea
+                id="comment"
+                class="w-full border p-3 rounded-lg"
+                rows="5"
+                placeholder="Write your review..."
+            ></textarea>
+        </div>
+
+        <button
+            class="w-full bg-yellow-500 text-white p-3 rounded-lg"
+        >
+            Submit Review
+        </button>
+
+    </form>
+
+</main>
+
+<script src="./js/api.js"></script>
+<script src="./js/auth.js"></script>
+<script src="./js/guards.js"></script>
+
+<script>
+    requireAuth();
+    requireRole("USER");
+</script>
+
+<script src="./js/review.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RescueBite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-green-700">RescueBite</h1>
+
+    <div id="navLinks" class="space-x-4">
+        <a href="index.html">Home</a>
+        <a href="user-listings.html">Listings</a>
+        <a href="login.html" class="text-green-600">Login</a>
+        <a href="register.html" class="bg-green-600 text-white px-4 py-2 rounded-lg">Register</a>
+    </div>
+</nav>
+
+<section class="bg-green-700 text-white py-20 px-8 text-center">
+    <h2 class="text-5xl font-bold mb-6">Save Food. Help People. Reduce Waste.</h2>
+
+    <p class="max-w-3xl mx-auto text-lg mb-8">
+        RescueBite connects restaurants, users, and couriers. Restaurants can share extra food,
+        users can reserve available meals, and couriers can help with delivery.
+    </p>
+
+    <div class="space-x-4">
+        <a href="user-listings.html" class="bg-white text-green-700 px-6 py-3 rounded-lg font-bold">
+            Browse Food
+        </a>
+
+        <a href="register.html" class="border border-white px-6 py-3 rounded-lg font-bold">
+            Join RescueBite
+        </a>
+    </div>
+</section>
+
+<section class="p-8 max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6 text-center">How It Works</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <h3 class="text-xl font-bold mb-3">Restaurants</h3>
+            <p class="text-gray-600">Merchants create food listings and reduce waste.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <h3 class="text-xl font-bold mb-3">Users</h3>
+            <p class="text-gray-600">Users reserve available food before it expires.</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow text-center">
+            <h3 class="text-xl font-bold mb-3">Couriers</h3>
+            <p class="text-gray-600">Couriers accept deliveries and update delivery status.</p>
+        </div>
+    </div>
+</section>
+
+<section class="p-8 max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6">Available Listings</h2>
+
+    <div id="listingsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+</section>
+
+<section class="p-8 max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6">User Reviews</h2>
+
+    <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+</section>
+
+<footer class="bg-white mt-10 p-6 text-center text-gray-500">
+    RescueBite © 2026 — Food rescue platform
+</footer>
+
+<script src="./js/api.js"></script>
+<script src="./js/auth.js"></script>
+<script src="./js/index.js"></script>
+
+</body>
+</html>

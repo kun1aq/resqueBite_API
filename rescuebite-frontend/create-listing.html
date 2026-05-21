@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Listing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<nav class="bg-white shadow p-4 flex justify-between">
+    <h1 class="text-2xl font-bold">Create Listing</h1>
+
+    <div class="space-x-4">
+        <a href="listings.html">Listings</a>
+        <a href="location.html">Location</a>
+        <button onclick="logout()" class="text-red-500">Logout</button>
+    </div>
+</nav>
+
+<div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-xl shadow">
+    <form id="listingForm" class="space-y-4">
+        <input id="title" placeholder="Title" class="w-full border p-3 rounded-lg">
+
+        <textarea id="description" placeholder="Description" class="w-full border p-3 rounded-lg"></textarea>
+
+        <input id="ingredients" placeholder="Ingredients separated by comma" class="w-full border p-3 rounded-lg">
+
+        <input id="price" type="number" step="any" placeholder="Price" class="w-full border p-3 rounded-lg">
+
+        <input id="quantity" type="number" placeholder="Quantity" class="w-full border p-3 rounded-lg">
+
+        <select id="locationId" class="w-full border p-3 rounded-lg">
+            <option value="">Loading locations...</option>
+        </select>
+
+        <input id="freshUntil" type="datetime-local" class="w-full border p-3 rounded-lg">
+
+        <button class="w-full bg-green-600 text-white p-3 rounded-lg">
+            Create Listing
+        </button>
+    </form>
+</div>
+
+<script src="./js/api.js"></script>
+<script src="./js/auth.js"></script>
+<script src="./js/guards.js"></script>
+<script>
+    requireAuth();
+    requireRole("MERCHANT");
+</script>
+<script src="./js/create-listing.js"></script>
+
+</body>
+</html>
