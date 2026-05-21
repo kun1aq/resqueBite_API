@@ -26,4 +26,16 @@ router.post(
   validate(listingController.allergyParserSchema),
   listingController.checkAllergies
 );
+router.patch(
+  "/:id",
+  authenticate,
+  validate(listingController.updateListingSchema),
+  listingController.updateListing
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  listingController.deleteListing
+);
 module.exports = router;

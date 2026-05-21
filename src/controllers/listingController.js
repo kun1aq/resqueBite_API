@@ -215,11 +215,95 @@ async function checkAllergies(req, res, next) {
     next(error);
   }
 }
+const updateListingSchema = z.object({
+  body: z.object({
+    title: z.string().min(3).optional(),
+    description: z.string().optional(),
+    ingredients: z.array(z.string()).optional(),
+    price: z.number().positive().optional(),
+    quantity: z.number().int().positive().optional(),
+    freshUntil: z.string().optional()
+  })
+});
+
+async function updateListing(req, res, next) {
+  try {
+    if (req.user.role !== "MERCHANT") {
+      throw new AppError("Only merchants can update listings", 403);
+    }
+
+    const listing = await prisma.foodListing.findUnique({
+      where: { id: req.params.id }
+    });
+
+    if (!listing) {
+      throw new AppError("Listing not found", 404);
+    }
+
+    if (listing.merchantId !== req.user.id) {
+      throw new AppError("Forbidden", 403);
+    }
+
+    const data = { ...req.validated.body };
+
+    if (data.freshUntil) {
+      data.freshUntil = new Date(data.freshUntil);
+    }
+
+    const updated = await prisma.foodListing.update({
+      where: { id: listing.id },
+      data
+    });
+
+    res.json({
+      success: true,
+      data: updated
+    });
+
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteListing(req, res, next) {
+  try {
+    if (req.user.role !== "MERCHANT") {
+      throw new AppError("Only merchants can delete listings", 403);
+    }
+
+    const listing = await prisma.foodListing.findUnique({
+      where: { id: req.params.id }
+    });
+
+    if (!listing) {
+      throw new AppError("Listing not found", 404);
+    }
+
+    if (listing.merchantId !== req.user.id) {
+      throw new AppError("Forbidden", 403);
+    }
+
+    await prisma.foodListing.delete({
+      where: { id: listing.id }
+    });
+
+    res.json({
+      success: true,
+      message: "Listing deleted successfully"
+    });
+
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   createListingSchema,
+  updateListingSchema,
   createListing,
   getListings,
+  updateListing,
+  deleteListing,
   updateListingStatus,
   allergyParserSchema,
   checkAllergies
