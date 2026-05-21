@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const path = require("path");
 
 const env = require("./config/env");
 const errorHandler = require("./middleware/errorHandler");
@@ -12,11 +13,15 @@ const reviewRoutes = require("./routes/review.routes");
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false
+  })
+);
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.use(express.static(path.join(__dirname, "../public")));
 app.get("/", (req, res) => {
   res.json({
     success: true,
