@@ -1,4 +1,4 @@
-const prisma = require("../config/prisma");
+const prisma = require("../config/database");
 const AppError = require("../utils/AppError");
 
 exports.createReview = async (req, res, next) => {
@@ -102,6 +102,43 @@ exports.getListingReviews = async (req, res, next) => {
 
     res.json({
       success: true,
+      data: reviews
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+exports.getAllReviews = async (req, res, next) => {
+  try {
+    const reviews = await prisma.review.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true
+          }
+        },
+        listing: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            price: true,
+            status: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: "desc"
+      }
+    });
+
+    res.json({
+      success: true,
+      count: reviews.length,
       data: reviews
     });
   } catch (error) {

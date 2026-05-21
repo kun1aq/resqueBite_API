@@ -14,9 +14,33 @@ router.post(
 );
 
 router.get(
+  "/",
+  locationController.getAllLocations
+);
+
+router.get(
   "/my",
   authenticate,
   locationController.getMyLocations
+);
+
+router.get(
+  "/:id",
+  authenticate,
+  locationController.getLocationById
+);
+
+router.patch(
+  "/:id",
+  authenticate,
+  validate(locationController.updateLocationSchema),
+  locationController.updateLocation
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  locationController.deleteLocation
 );
 
 module.exports = router;

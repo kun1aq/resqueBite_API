@@ -4,7 +4,9 @@ const authenticate = require("../middleware/auth");
 const requireRole = require("../middleware/requireRole");
 const reviewController = require("../controllers/reviewController");
 
+
 const router = express.Router();
+router.get("/", reviewController.getAllReviews);
 
 router.post(
   "/",

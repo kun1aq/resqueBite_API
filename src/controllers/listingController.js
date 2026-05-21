@@ -9,7 +9,7 @@ const createListingSchema = z.object({
     ingredients: z.array(z.string()),
     price: z.number().positive(),
     quantity: z.number().int().positive(),
-    locationName: z.string().min(2),
+    locationId: z.string().uuid(),
     freshUntil: z.string()
   })
 });
@@ -23,8 +23,8 @@ async function createListing(req, res, next) {
     const data = req.validated.body;
     const location = await prisma.restaurantLocation.findFirst({
       where: {
-      merchantId: req.user.id,
-      name: data.locationName
+        id: data.locationId,
+        merchantId: req.user.id
       }
     });
 

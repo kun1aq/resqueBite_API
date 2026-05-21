@@ -8,7 +8,7 @@ const YAML = require("yamljs");
 const env = require("./config/env");
 const errorHandler = require("./middleware/errorHandler");
 const AppError = require("./utils/AppError");
-const reviewRoutes = require("./routes/reviewRoutes");
+const reviewRoutes = require("./routes/review.routes");
 
 const app = express();
 
