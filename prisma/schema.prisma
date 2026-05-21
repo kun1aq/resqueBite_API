@@ -61,6 +61,8 @@ model User {
   refreshTokens       RefreshToken[]
   locations           RestaurantLocation[]
   courierReservations StockReservation[]   @relation("CourierReservations")
+  reviews             Review[]
+  reports             Report[]
 }
 
 model RefreshToken {
@@ -110,10 +112,15 @@ model FoodListing {
   reservations StockReservation[]
   locationId   String?
   location     RestaurantLocation? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  reviews      Review[]
+  categoryId   String?
+  category     Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  reports      Report[]
 
   @@index([status])
   @@index([merchantId])
   @@index([latitude, longitude])
+  @@index([categoryId])
 }
 
 model StockReservation {
@@ -165,4 +172,64 @@ enum DeliveryStatus {
   PICKED_UP
   DELIVERING
   DELIVERED
+}
+
+model Review {
+  id      String  @id @default(uuid())
+  rating  Int
+  comment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  listingId String
+  listing   FoodListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  reports   Report[]
+
+  @@unique([userId, listingId])
+  @@index([listingId])
+  @@index([userId])
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings FoodListing[]
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  RESOLVED
+  REJECTED
+}
+
+model Report {
+  id          String       @id @default(uuid())
+  reason      String
+  description String?
+  status      ReportStatus @default(OPEN)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reporterId String
+  reporter   User   @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  listingId String?
+  listing   FoodListing? @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  reviewId String?
+  review   Review? @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([listingId])
+  @@index([reviewId])
+  @@index([status])
 }

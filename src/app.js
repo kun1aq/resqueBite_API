@@ -8,6 +8,7 @@ const YAML = require("yamljs");
 const env = require("./config/env");
 const errorHandler = require("./middleware/errorHandler");
 const AppError = require("./utils/AppError");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -28,6 +29,9 @@ app.use("/listings", require("./routes/listing.routes"));
 app.use("/reservations", require("./routes/order.routes"));
 app.use("/admin", require("./routes/admin.routes"));
 app.use("/locations", require("./routes/location.routes"));
+app.use("/reviews", reviewRoutes);
+
+
 
 try {
   const swaggerDocument = YAML.load("openapi.yaml");
