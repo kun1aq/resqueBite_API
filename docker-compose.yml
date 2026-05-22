@@ -1,23 +1,106 @@
+version: "3.9"
+
 services:
+
   postgres:
     image: postgres:15
     container_name: rescuebite_postgres
+
     restart: always
+
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: rescuebite_db
+
     ports:
       - "5432:5432"
+
     volumes:
       - rescuebite_pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - rescuebite_network
 
   redis:
     image: redis:7
     container_name: rescuebite_redis
+
     restart: always
+
     ports:
       - "6379:6379"
 
+    volumes:
+      - rescuebite_redisdata:/data
+
+    command: redis-server --appendonly yes
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - rescuebite_network
+
+  app:
+    build: .
+
+    container_name: rescuebite_api
+
+    restart: always
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      NODE_ENV: development
+
+      PORT: 3000
+
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/rescuebite_db?schema=public
+
+      REDIS_URL: redis://redis:6379
+
+      JWT_ACCESS_SECRET: super_access_secret_change_me
+      JWT_REFRESH_SECRET: super_refresh_secret_change_me
+
+      ACCESS_TOKEN_EXPIRES_IN: 15m
+      REFRESH_TOKEN_EXPIRES_IN: 7d
+
+      RESEND_API_KEY: your_resend_api_key
+
+      EMAIL_FROM: RescueBite <onboarding@resend.dev>
+
+      APP_URL: http://localhost:3000
+
+      RESEND_ALLOWED_EMAIL: kuanysh.zhienbai@narxoz.kz
+
+      CORS_ORIGIN: http://localhost:3000
+
+    command: sh -c "npx prisma migrate deploy && npm start"
+
+    networks:
+      - rescuebite_network
+
 volumes:
   rescuebite_pgdata:
+  rescuebite_redisdata:
+
+networks:
+  rescuebite_network:
