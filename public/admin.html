@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<nav class="bg-white shadow p-4 flex justify-between">
+    <h1 class="text-2xl font-bold text-red-600">Admin Panel</h1>
+
+    <div class="space-x-4">
+        <a href="index.html">Home</a>
+        <button onclick="logout()" class="text-red-500">Logout</button>
+    </div>
+</nav>
+
+<main class="p-8 space-y-10">
+
+    <section>
+        <h2 class="text-3xl font-bold mb-4">System Statistics</h2>
+
+        <div id="statsContainer" class="grid grid-cols-1 md:grid-cols-5 gap-4"></div>
+    </section>
+
+    <section>
+        <h2 class="text-3xl font-bold mb-4">Users</h2>
+
+        <div class="bg-white rounded-xl shadow overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="p-3">Username</th>
+                        <th class="p-3">Email</th>
+                        <th class="p-3">Role</th>
+                        <th class="p-3">Created</th>
+                    </tr>
+                </thead>
+
+                <tbody id="usersTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="text-3xl font-bold mb-4">Reservations</h2>
+
+        <div id="reservationsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
+
+</main>
+
+<script src="./js/api.js"></script>
+<script src="./js/auth.js"></script>
+<script src="./js/guards.js"></script>
+
+<script>
+    requireAuth();
+    requireRole("ADMIN");
+</script>
+
+<script src="./js/admin.js"></script>
+
+</body>
+</html>
